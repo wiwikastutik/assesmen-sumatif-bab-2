@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asesmen Sumatif IPA Kelas VIII - MTs Kota Malang</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- React & ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        teal: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white !important; color: black !important; }
+        }
+        .print-only { display: none; }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans text-slate-800 min-h-screen">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        
+        // Initial 20 Questions Data
+        const defaultQuestions = [
+            // 15 Pilihan Ganda (1 - 15)
+            {
+                id: 1,
+                type: 'pg',
+                question: 'Saat melakukan kegiatan jalan sehat di kawasan Alun-Alun Kota Malang yang berudara sejuk pada pagi hari, terjadi proses pengambilan napas secara mendalam. Mekanisme inspirasi pernapasan dada yang benar pada kondisi tersebut adalah...',
+                options: [
+                    'Otot antar tulang rusuk berkontraksi -> tulang rusuk terangkat -> volume rongga dada membesar -> tekanan udara dada mengecil -> udara masuk',
+                    'Otot antar tulang rusuk relaksasi -> tulang rusuk turun -> volume dada mengecil -> tekanan udara mengecil -> udara masuk',
+                    'Otot diafragma berkontraksi -> diafragma mendatar -> volume dada mengecil -> udara luar masuk',
+                    'Otot antar tulang rusuk relaksasi -> diafragma melengkung -> tekanan dada membesar -> udara masuk'
+                ],
+                correctAnswer: 0,
+                explanation: 'Saat inspirasi pernapasan dada, otot antar tulang rusuk berkontraksi sehingga tulang rusuk terangkat, volume rongga dada membesar, dan tekanan udara di dalam paru-paru menjadi lebih kecil daripada tekanan udara luar sehingga udara masuk.'
+            },
+            {
+                id: 2,
+                type: 'pg',
+                question: 'Ahmad, seorang siswa kelas VIII MTs di Kota Malang, melakukan latihan lari di Stadion Gajayana. Setelah berlari cepat, Ahmad mengukur kapasitas paru-parunya. Udara yang masih tetap berada di dalam paru-paru Ahmad meskipun ia telah menghembuskan napas semaksimal mungkin dinamakan...',
+                options: [
+                    'Udara Komplementer',
+                    'Udara Suplementer',
+                    'Udara Residu',
+                    'Kapasitas Vital'
+                ],
+                correctAnswer: 2,
+                explanation: 'Udara residu adalah udara sisa yang tetap berada dalam paru-paru (sekitar 1.000 mL) meskipun telah menghembuskan napas semaksimal mungkin.'
+            },
+            {
+                id: 3,
+                type: 'pg',
+                question: 'Grafik pengujian sampel udara di sekitar jalan protokol Kota Malang menunjukkan peningkatan kadar asap kendaraan. Jika seseorang terus-menerus menghirup udara yang terkontaminasi tersebut, zat pencemar dapat merusak dinding alveolus sehingga elastisitasnya berkurang dan luas bidang difusi menyempit. Gangguan pernapasan ini dikenal sebagai...',
+                options: [
+                    'Emfisema',
+                    'Bronkitis kronis',
+                    'Asma bronkiale',
+                    'Pneumonia'
+                ],
+                correctAnswer: 0,
+                explanation: 'Emfisema adalah penyakit akibat hilangnya elastisitas dinding alveolus yang robek/rusak, sering dipicu oleh polusi udara kronis atau asap.'
+            },
+            {
+                id: 4,
+                type: 'pg',
+                question: 'Rombongan siswa MTs melakukan studi lapangan ke kawasan Gunung Bromo (ketinggian >2.000 mdpl). Beberapa siswa merasakan ritme pernapasan menjadi lebih cepat dan terengah-engah dibanding saat berada di Kota Malang. Penyebab utama fenomena fisiologis ini adalah...',
+                options: [
+                    'Suhu udara dingin di Bromo membekukan pasokan hemoglobin dalam darah',
+                    'Tekanan parsial oksigen di dataran tinggi lebih rendah sehingga tubuh merespon dengan mempercepat frekuensi pernapasan',
+                    'Kadar karbondioksida di pegunungan sangat tinggi sehingga meracuni sistem pernapasan',
+                    'Paru-paru mengecil akibat tekanan udara pegunungan yang sangat tinggi'
+                ],
+                correctAnswer: 1,
+                explanation: 'Di daerah dataran tinggi, tekanan udara dan kadar parsial O2 lebih rendah. Untuk mencukupi pasokan O2 ke jaringan, tubuh merespons dengan mempercepat ritme/frekuensi pernapasan.'
+            },
+            {
+                id: 5,
+                type: 'pg',
+                question: 'Perhatikan persamaan reaksi kimia respirasi seluler berikut:\nC6H12O6 + 6O2 -> 6CO2 + 6H2O + Energi (ATP).\nBerdasarkan reaksi tersebut, organ pernapasan dan organ ekskresi yang bekerjasama langsung untuk mengeluarkan zat sisa respirasi seluler tersebut berturut-turut adalah...',
+                options: [
+                    'Paru-paru (mengeluarkan CO2 dan uap air H2O) dan Ginjal/Kulit (mengeluarkan kelebihan H2O)',
+                    'Jantung (mengeluarkan CO2) dan Kulit (mengeluarkan O2)',
+                    'Hati (mengeluarkan glukosa) dan Paru-paru (mengeluarkan O2)',
+                    'Lambung (mengeluarkan CO2) dan Ginjal (mengeluarkan urea)'
+                ],
+                correctAnswer: 0,
+                explanation: 'Hasil sisa respirasi seluler adalah CO2 dan H2O. CO2 dikeluarkan melalui paru-paru (pernapasan), sedangkan H2O dikeluarkan melalui paru-paru (uap air), ginjal (urine), dan kulit (keringat).'
+            },
+            {
+                id: 6,
+                type: 'pg',
+                question: 'Ketika seorang siswa meniupkan napasnya ke dalam tabung reaksi yang berisi air kapur (Ca(OH)2), air kapur tersebut perlahan berubah menjadi keruh. Percobaan sederhana ini membuktikan bahwa proses pernapasan menghasilkan zat sisa berupa...',
+                options: [
+                    'Oksigen (O2)',
+                    'Karbon Monoksida (CO)',
+                    'Karbon Dioksida (CO2)',
+                    'Nitrogen (N2)'
+                ],
+                correctAnswer: 2,
+                explanation: 'Karbon dioksida (CO2) bereaksi dengan air kapur Ca(OH)2 membentuk endapan kalsium karbonat (CaCO3) yang membuat larutan tampak keruh.'
+            },
+            {
+                id: 7,
+                type: 'pg',
+                question: 'Pada hasil uji laboratorium klinis seorang pasien di RSUD Dr. Saiful Anwar Malang, ditemukan adanya molekul protein (albumin) dalam sampel urinenya. Berdasarkan struktur organ ginjal, gangguan fungsi terjadi pada bagian nefron yaitu...',
+                options: [
+                    'Glomerulus yang mengalami kerusakan pada membran filtrasi',
+                    'Tubulus Kontortus Proksimal yang gagal melakukan reabsorpsi air',
+                    'Lengkung Henle yang kekurangan ion garam kalsium',
+                    'Tubulus Kontortus Distal yang menyerap kembali zat beracun'
+                ],
+                correctAnswer: 0,
+                explanation: 'Albuminuria ditandai hadirnya protein dalam urine akibat kerusakan proses penyaringan (filtrasi) pada glomerulus.'
+            },
+            {
+                id: 8,
+                type: 'pg',
+                question: 'Saat menikmati hidangan Bakso Malang yang kaya akan bumbu dan garam natrium, kepekatan cairan darah dalam tubuh meningkat. Respon organ ginjal dan hormon Antidiuretik (ADH) untuk menjaga kestabilan cairan tubuh adalah...',
+                options: [
+                    'Sekresi ADH meningkat -> reabsorpsi air di tubulus ginjal meningkat -> urine yang dihasilkan sedikit dan pekat',
+                    'Sekresi ADH menurun -> reabsorpsi air di tubulus berkurang -> urine yang dihasilkan banyak dan encer',
+                    'Hormon ADH berhenti bekerja -> ginjal membuang seluruh glukosa dan protein',
+                    'Kelenjar hipofisis merusak sel ginjal sehingga terbentuk batu ginjal'
+                ],
+                correctAnswer: 0,
+                explanation: 'Konsumsi garam tinggi meningkatkan osmolaritas darah. Otak merangsang pelepasan ADH agar reabsorpsi air di ginjal meningkat, sehingga tubuh menghemat air dan urine menjadi pekat/sedikit.'
+            },
+            {
+                id: 9,
+                type: 'pg',
+                question: 'Pada musim hujan dengan cuaca dingin khas Kota Malang, Rina mengamati bahwa frekuensi buang air kecilnya meningkat drastis dibandingkan saat cuaca terik. Fenomena fisiologis ini terjadi karena...',
+                options: [
+                    'Pembuluh darah di kulit menyempit untuk mengurangi produksi keringat, sehingga sisa air tubuh dialirkan terutama melalui ginjal',
+                    'Kelenjar keringat bekerja melipatgandakan pengeluaran air saat cuaca dingin',
+                    'Tubuh menyerap uap air dari udara sekitar langsung masuk ke pembuluh darah',
+                    'Ginjal berhenti melakukan proses augmentasi saat suhu udara turun'
+                ],
+                correctAnswer: 0,
+                explanation: 'Pada cuaca dingin, vasokonstriksi pembuluh darah kulit terjadi untuk menjaga panas tubuh, pengeluaran keringat berkurang, sehingga ginjal memproses kelebihan air tubuh menjadi urine.'
+            },
+            {
+                id: 10,
+                type: 'pg',
+                question: 'Selain berperan dalam sistem pencernaan, organ hati (hepar) dikategorikan sebagai organ ekskresi yang sangat vital karena...',
+                options: [
+                    'Merapikan sel darah merah tua untuk membentuk bilirubin dan merombak protein berlebih menjadi urea',
+                    'Menyaring langsung sisa air dan garam dari pembuluh kapiler dada',
+                    'Menghasilkan asam lambung yang akan dibuang bersama feses',
+                    'Menyimpan sisa hormon insulin dalam bentuk batu empedu'
+                ],
+                correctAnswer: 0,
+                explanation: 'Hati sebagai organ ekskresi berfungsi merombak sel darah merah tua (eritrosit) menjadi bilirubin/biliverdin (zat warna empedu) serta mengubah amonia beracun menjadi urea.'
+            },
+            {
+                id: 11,
+                type: 'pg',
+                question: 'Seorang pasien mengeluhkan rasa nyeri hebat saat buang air kecil. Hasil pemeriksaan ultrasound menunjukkan adanya endapan kristal kalsium oksalat yang mengendap pada kantung kemihnya. Langkah pencegahan yang paling tepat untuk menangani penyakit batu ginjal tersebut adalah...',
+                options: [
+                    'Membatasi konsumsi air minum dan memperbanyak teh kental',
+                    'Mengonsumsi kecukupan air putih setiap hari serta mengurangi konsumsi garam berlebih',
+                    'Mengurangi aktivitas olahraga agar ginjal tidak bekerja terlalu keras',
+                    'Menahan keinginan buang air kecil agar endapan garam larut kembali'
+                ],
+                correctAnswer: 1,
+                explanation: 'Cukup minum air putih membantu melarutkan konsentrasi garam mineral sehingga mencegah pengendapan kristal kalsium oksalat membentuk batu ginjal.'
+            },
+            {
+                id: 12,
+                type: 'pg',
+                question: 'Gas Karbon Monoksida (CO) dari asap pembakaran tidak sempurna sangat berbahaya jika terhirup ke dalam organ pernapasan manusia. Hal ini disebabkan karena...',
+                options: [
+                    'Gas CO memiliki daya ikat (afinitas) jauh lebih kuat terhadap Hemoglobin dibandingkan Oksigen',
+                    'Gas CO mengkristal di dalam kantung alveolus dan menyumbat jalan napas',
+                    'Gas CO membunuh jaringan silia pada trakea secara mendadak',
+                    'Gas CO mengubah warna eritrosit menjadi hijau tua'
+                ],
+                correctAnswer: 0,
+                explanation: 'Afinitas ikatan CO terhadap hemoglobin sekitar 200x lebih kuat dibanding O2, sehingga hemoglobin tidak dapat mengikat O2 untuk didistribusikan ke sel tubuh.'
+            },
+            {
+                id: 13,
+                type: 'pg',
+                question: 'Pada kegiatan tadarus dan qiroah di MTs, siswa dilatih mengolah vokal. Pita suara manusia yang bergetar saat udara mengalir keluar terletak pada saluran pernapasan yaitu...',
+                options: [
+                    'Faring',
+                    'Laring',
+                    'Trakea',
+                    'Bronkus'
+                ],
+                correctAnswer: 1,
+                explanation: 'Laring (pangkal tenggorokan) memuat pita suara yang akan bergetar ketika terhembus udara dari paru-paru untuk menghasilkan nada/suara.'
+            },
+            {
+                id: 14,
+                type: 'pg',
+                question: 'Ditemukan sampel urine seorang siswa berwarna merah bata setelah ditetesi reagen Benedict dan dipanaskan. Hal ini menandakan adanya kandungan glukosa pada urinenya. Kerusakan fungsi ginjal yang terjadi adalah pada proses...',
+                options: [
+                    'Reabsorpsi di Tubulus Kontortus Proksimal (Diabetes Melitus)',
+                    'Filtrasi di Glomerulus (Albuminuria)',
+                    'Augmentasi di Tubulus Kontortus Distal (Diabetes Insipidus)',
+                    'Penyimpanan di Pelvis Renalis (Anuria)'
+                ],
+                correctAnswer: 0,
+                explanation: 'Glukosa seharusnya diserap kembali (reabsorpsi) secara sempurna di Tubulus Kontortus Proksimal (TKP). Kehadiran glukosa pada urine menandakan kegagalan reabsorpsi atau kadar gula darah tinggi.'
+            },
+            {
+                id: 15,
+                type: 'pg',
+                question: 'Mengapa organ kulit dapat dikelompokkan sebagai bagian dari sistem ekskresi sekaligus sistem pengatur suhu tubuh (termoregulasi)?',
+                options: [
+                    'Kelenjar keringat mengeluarkan cairan bergaram dan sisa metabolisme yang saat menguap dapat menurunkan suhu tubuh',
+                    'Kulit menyerap gas O2 langsung dari udara dingin Kota Malang',
+                    'Kulit dapat merubah provitamin D menjadi vitamin D melalui sinar matahari',
+                    'Lapisan dermis menyimpan lemak sebagai bahan bakar pembentukan urine'
+                ],
+                correctAnswer: 0,
+                explanation: 'Keringat yang dikeluarkan kulit mengandung H2O, NaCl, dan sedikit urea (fungsi ekskresi). Saat keringat menguap dari permukaan kulit, ia menyerap panas tubuh sehingga suhu tubuh tetap stabil (fungsi termoregulasi).'
+            },
+
+            // 2 Pilihan Ganda Kompleks (16 - 17)
+            {
+                id: 16,
+                type: 'pgk',
+                question: 'Manakah di antara pernyataan-pernyataan berikut yang BENAR mengenai mekanisme pernapasan manusia? (Pilih semua jawaban yang benar!)',
+                options: [
+                    'Pernapasan dada melibatkan otot antar tulang rusuk (interkostalis).',
+                    'Saat inspirasi pernapasan perut, otot diafragma berkontraksi sehingga diafragma memposisi mendatar.',
+                    'Ekspirasi terjadi ketika tekanan udara di dalam paru-paru lebih kecil daripada tekanan udara luar.',
+                    'Kapasitas vital paru-paru merupakan penjumlahan dari volume tidal, volume komplementer, dan volume suplementer.'
+                ],
+                correctAnswers: [0, 1, 3],
+                explanation: 'Pernyataan 1, 2, dan 4 benar. Pernyataan 3 salah karena saat ekspirasi, tekanan udara di dalam paru-paru lebih besar dibanding udara luar sehingga udara terdesak keluar.'
+            },
+            {
+                id: 17,
+                type: 'pgk',
+                question: 'Faktor-faktor yang berpengaruh langsung terhadap volume dan konsentrasi pekat/encer urine yang dikeluarkan oleh tubuh seseorang setiap harinya adalah... (Pilih semua jawaban yang benar!)',
+                options: [
+                    'Jumlah dan tingkat konsumsi air minum harian.',
+                    'Suhu lingkungan sekitar (dingin vs panas).',
+                    'Konsentrasi hormon Antidiuretik (ADH) dalam sirkulasi darah.',
+                    'Warna seragam sekolah yang digunakan saat beraktivitas.'
+                ],
+                correctAnswers: [0, 1, 2],
+                explanation: 'Volume urine dipengaruhi oleh asupan cairan, suhu lingkungan, aktivitas fisik, kondisi kesehatan, dan kadar hormon ADH.'
+            },
+
+            // 2 Menjodohkan (18 - 19)
+            {
+                id: 18,
+                type: 'match',
+                question: 'Jodohkanlah nama struktur organ pernapasan berikut dengan fungsi adaptif utamanya yang sesuai!',
+                pairs: [
+                    { item: 'Trakea (Batang Tenggorokan)', correctTarget: 'Mendorong keluar kotoran/debu dengan silia' },
+                    { item: 'Alveolus', correctTarget: 'Tempat difusi O2 dan CO2 melalui kapiler' },
+                    { item: 'Rongga Hidung', correctTarget: 'Menyesuaikan suhu & kelembapan udara masuk' },
+                    { item: 'Pleura', correctTarget: 'Membran pelindung pembungkus paru-paru' }
+                ],
+                targets: [
+                    'Mendorong keluar kotoran/debu dengan silia',
+                    'Tempat difusi O2 dan CO2 melalui kapiler',
+                    'Menyesuaikan suhu & kelembapan udara masuk',
+                    'Membran pelindung pembungkus paru-paru',
+                    'Menghasilkan hormon pembakar lemak'
+                ],
+                explanation: 'Pasangan yang tepat: Trakea -> Mendorong kotoran dengan silia; Alveolus -> Difusi O2 & CO2; Rongga Hidung -> Penyesuai suhu & kelembapan; Pleura -> Membran pelindung.'
+            },
+            {
+                id: 19,
+                type: 'match',
+                question: 'Jodohkanlah kelainan/gangguan sistem ekskresi berikut dengan penyebab utamanya yang tepat!',
+                pairs: [
+                    { item: 'Nefritis', correctTarget: 'Infeksi bakteri Streptococcus pada nefron' },
+                    { item: 'Diabetes Insipidus', correctTarget: 'Kekurangan hormon ADH secara signifikan' },
+                    { item: 'Albuminuria', correctTarget: 'Kerusakan filtrasi pada membran glomerulus' },
+                    { item: 'Sirosis Hati', correctTarget: 'Kerusakan sel hati akibat toksin/pola hidup' }
+                ],
+                targets: [
+                    'Infeksi bakteri Streptococcus pada nefron',
+                    'Kekurangan hormon ADH secara signifikan',
+                    'Kerusakan filtrasi pada membran glomerulus',
+                    'Kerusakan sel hati akibat toksin/pola hidup',
+                    'Penyumbatan pembuluh darah jantung'
+                ],
+                explanation: 'Pasangan tepat: Nefritis -> Infeksi bakteri Streptococcus; Diabetes Insipidus -> Defisiensi ADH; Albuminuria -> Kerusakan filtrasi Glomerulus; Sirosis Hati -> Kerusakan jaringan hati.'
+            },
+
+            // 1 Isian Singkat (20)
+            {
+                id: 20,
+                type: 'short',
+                question: 'Organ ekskresi manusia yang berfungsi khusus merombak sel darah merah (eritrosit) yang sudah tua dan rusak menjadi bilirubin dan biliverdin adalah...',
+                correctAnswer: 'hati',
+                acceptableAnswers: ['hati', 'organ hati', 'hepar'],
+                explanation: 'Hati (hepar) merombak hemoglobin dari eritrosit tua menjadi zat warna empedu berupa bilirubin dan biliverdin.'
+            }
+        ];
+
+        function App() {
+            // App state management
+            const [view, setView] = React.useState('login'); // 'login', 'exam', 'result', 'admin'
+            const [adminPass, setAdminPass] = React.useState(() => localStorage.getItem('mts_admin_pass') || 'admin123');
+            const [logoUrl, setLogoUrl] = React.useState(() => localStorage.getItem('mts_logo_url') || 'https://upload.wikimedia.org/wikipedia/commons/2/22/Kementerian_Agama_Ikon.png');
+            const [headerTitle, setHeaderTitle] = React.useState(() => localStorage.getItem('mts_header_title') || 'ASESMEN SUMATIF IPA KELAS VIII MTs KOTA MALANG');
+            const [penyusun, setPenyusun] = React.useState(() => localStorage.getItem('mts_penyusun') || 'Wiwik Astutik, S. Pd - MGMP IPA MTs Kota Malang');
+            
+            const [questions, setQuestions] = React.useState(() => {
+                const saved = localStorage.getItem('mts_questions');
+                return saved ? JSON.parse(saved) : defaultQuestions;
+            });
+
+            const [studentAttempts, setStudentAttempts] = React.useState(() => {
+                const saved = localStorage.getItem('mts_attempts');
+                return saved ? JSON.parse(saved) : [];
+            });
+
+            // Student session info
+            const [currentStudent, setCurrentStudent] = React.useState({
+                nama: '',
+                kelas: 'VIII A',
+                presensi: ''
+            });
+
+            const [isTestingMode, setIsTestingMode] = React.useState(false); // If true, launched from admin
+
+            // Active exam state
+            const [answers, setAnswers] = React.useState({});
+            const [currentQIndex, setCurrentQIndex] = React.useState(0);
+            const [timeLeft, setTimeLeft] = React.useState(30 * 60); // 30 mins in sec
+            const [timerActive, setTimerActive] = React.useState(false);
+            const [examSubmitted, setExamSubmitted] = React.useState(false);
+            const [finalResult, setFinalResult] = React.useState(null);
+
+            // Save state to localStorage whenever questions or attempts change
+            React.useEffect(() => {
+                localStorage.setItem('mts_questions', JSON.stringify(questions));
+            }, [questions]);
+
+            React.useEffect(() => {
+                localStorage.setItem('mts_attempts', JSON.stringify(studentAttempts));
+            }, [studentAttempts]);
+
+            // Timer countdown effect
+            React.useEffect(() => {
+                let timer = null;
+                if (timerActive && timeLeft > 0) {
+                    timer = setInterval(() => {
+                        setTimeLeft(prev => {
+                            if (prev <= 1) {
+                                clearInterval(timer);
+                                handleAutoSubmit();
+                                return 0;
+                            }
+                            return prev - 1;
+                        });
+                    }, 1000);
+                }
+                return () => clearInterval(timer);
+            }, [timerActive, timeLeft]);
+
+            const calculateScore = (userAnswers) => {
+                let totalPoints = 0;
+                let maxPoints = 0;
+
+                questions.forEach(q => {
+                    if (q.type === 'pg') {
+                        maxPoints += 4; // 15 * 4 = 60
+                        if (userAnswers[q.id] === q.correctAnswer) {
+                            totalPoints += 4;
+                        }
+                    } else if (q.type === 'pgk') {
+                        maxPoints += 10; // 2 * 10 = 20
+                        const userSel = userAnswers[q.id] || [];
+                        const correctSel = q.correctAnswers || [];
+                        // Check exact match
+                        const isExact = userSel.length === correctSel.length && 
+                                        userSel.every(val => correctSel.includes(val));
+                        if (isExact) {
+                            totalPoints += 10;
+                        } else {
+                            // Partial score logic
+                            let matchCount = 0;
+                            userSel.forEach(val => {
+                                if (correctSel.includes(val)) matchCount++;
+                            });
+                            const wrongCount = userSel.filter(val => !correctSel.includes(val)).length;
+                            let partial = (matchCount * 2.5) - (wrongCount * 2);
+                            if (partial > 0) totalPoints += Math.min(partial, 8);
+                        }
+                    } else if (q.type === 'match') {
+                        maxPoints += 8; // 2 * 8 = 16
+                        const userMatch = userAnswers[q.id] || {};
+                        q.pairs.forEach(pair => {
+                            if (userMatch[pair.item] === pair.correctTarget) {
+                                totalPoints += 2; // 4 pairs * 2 = 8
+                            }
+                        });
+                    } else if (q.type === 'short') {
+                        maxPoints += 4; // 1 * 4 = 4
+                        const val = (userAnswers[q.id] || '').trim().toLowerCase();
+                        if (q.acceptableAnswers.some(ans => val.includes(ans.toLowerCase()))) {
+                            totalPoints += 4;
+                        }
+                    }
+                });
+
+                // Total max = 100
+                const finalScore = Math.round((totalPoints / maxPoints) * 100);
+                return Math.min(finalScore, 100);
+            };
+
+            const startExam = (studentData, testing = false) => {
+                // Check if already taken
+                if (!testing) {
+                    const existing = studentAttempts.find(
+                        a => a.nama.toLowerCase().trim() === studentData.nama.toLowerCase().trim() && 
+                             a.presensi === studentData.presensi
+                    );
+                    if (existing) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Sudah Pernah Mengerjakan!',
+                            text: `Siswa bernama ${studentData.nama} (No Presensi ${studentData.presensi}) telah menyelesaikan asesmen ini sebelumnya dengan nilai ${existing.score}.`,
+                            confirmButtonColor: '#0d9488'
+                        });
+                        setFinalResult(existing);
+                        setView('result');
+                        return;
+                    }
+                }
+
+                setCurrentStudent(studentData);
+                setIsTestingMode(testing);
+                setAnswers({});
+                setCurrentQIndex(0);
+                setTimeLeft(30 * 60);
+                setExamSubmitted(false);
+                setTimerActive(true);
+                setView('exam');
+            };
+
+            const handleAutoSubmit = () => {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Waktu Habis!',
+                    text: 'Waktu 30 menit telah berakhir. Jawaban Anda akan dikirim secara otomatis.',
+                    confirmButtonColor: '#0d9488'
+                }).then(() => {
+                    submitExam();
+                });
+            };
+
+            const submitExam = () => {
+                setTimerActive(false);
+                const score = calculateScore(answers);
+                const resultData = {
+                    nama: currentStudent.nama || 'Siswa Uji Coba',
+                    kelas: currentStudent.kelas || 'VIII A',
+                    presensi: currentStudent.presensi || '00',
+                    score: score,
+                    passed: score >= 80,
+                    date: new Date().toLocaleString('id-ID'),
+                    timeSpent: `${Math.floor((1800 - timeLeft) / 60)} menit ${(1800 - timeLeft) % 60} detik`,
+                    answers: answers,
+                    isTesting: isTestingMode
+                };
+
+                if (!isTestingMode) {
+                    const updated = [...studentAttempts, resultData];
+                    setStudentAttempts(updated);
+                }
+
+                setFinalResult(resultData);
+                setExamSubmitted(true);
+                setView('result');
+            };
+
+            const renderLoginView = () => {
+                return (
+                    <div className="max-w-4xl mx-auto px-4 py-8">
+                        {/* Header Banner */}
+                        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8 text-center border-b-4 border-teal-600 relative overflow-hidden">
+                            <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+                                <img 
+                                    src={logoUrl} 
+                                    alt="Logo Sekolah" 
+                                    className="h-20 w-auto object-contain"
+                                    onError={(e) => { e.target.src = 'https://placehold.co/100x100/0d9488/ffffff?text=MTs'; }}
+                                />
+                                <div className="text-center md:text-left">
+                                    <h1 className="text-xl md:text-2xl font-bold text-slate-800 uppercase tracking-wide">{headerTitle}</h1>
+                                    <p className="text-sm font-semibold text-teal-700 mt-1">
+                                        <i className="fa-solid fa-graduation-cap mr-1"></i>
+                                        Penyusun: {penyusun}
+                                    </p>
+                                    <p className="text-xs text-slate-500 mt-1">Materi: Sistem Pernapasan & Sistem Ekskresi Manusia</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Login Options Card */}
+                        <div className="grid md:grid-cols-2 gap-8">
+                            {/* Student Login Card */}
+                            <div className="bg-white rounded-2xl shadow-lg p-6 border border-slate-200 hover:shadow-xl transition flex flex-col justify-between">
+                                <div>
+                                    <div className="flex items-center gap-3 mb-4 text-teal-700">
+                                        <div className="p-3 bg-teal-100 rounded-xl">
+                                            <i className="fa-solid fa-user-graduate text-2xl"></i>
+                                        </div>
+                                        <div>
+                                            <h2 className="text-lg font-bold text-slate-800">Akses Siswa</h2>
+                                            <p className="text-xs text-slate-500">Masuk untuk memulai asesmen online</p>
+                                        </div>
+                                    </div>
+
+                                    <form onSubmit={(e) => {
+                                        e.preventDefault();
+                                        const nama = e.target.nama.value.trim();
+                                        const kelas = e.target.kelas.value;
+                                        const presensi = e.target.presensi.value.trim();
+
+                                        if (!nama || !presensi) {
+                                            Swal.fire('Peringatan', 'Harap isi Nama Lengkap dan No. Presensi!', 'warning');
+                                            return;
+                                        }
+
+                                        startExam({ nama, kelas, presensi }, false);
+                                    }}>
+                                        <div className="mb-4">
+                                            <label className="block text-xs font-bold text-slate-700 mb-1 uppercase">Nama Lengkap Siswa</label>
+                                            <input 
+                                                type="text" 
+                                                name="nama" 
+                                                required 
+                                                placeholder="Contoh: Ahmad Maulana"
+                                                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm"
+                                            />
+                                        </div>
+
+                                        <div className="mb-4">
+                                            <label className="block text-xs font-bold text-slate-700 mb-1 uppercase">Kelas (Dropdown)</label>
+                                            <select 
+                                                name="kelas" 
+                                                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm bg-white"
+                                            >
+                                                <option value="VIII A">VIII A</option>
+                                                <option value="VIII B">VIII B</option>
+                                                <option value="VIII C">VIII C</option>
+                                                <option value="VIII D">VIII D</option>
+                                                <option value="VIII E">VIII E</option>
+                                                <option value="VIII F">VIII F</option>
+                                                <option value="VIII G">VIII G</option>
+                                                <option value="VIII H">VIII H</option>
+                                            </select>
+                                        </div>
+
+                                        <div className="mb-6">
+                                            <label className="block text-xs font-bold text-slate-700 mb-1 uppercase">No. Presensi (Password Siswa)</label>
+                                            <input 
+                                                type="number" 
+                                                name="presensi" 
+                                                required 
+                                                placeholder="Contoh: 12"
+                                                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-sm"
+                                            />
+                                            <span className="text-[11px] text-slate-400 mt-1 block">*Nomor presensi digunakan sebagai kata sandi login siswa.</span>
+                                        </div>
+
+                                        <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-6 text-xs text-amber-800 flex items-start gap-2">
+                                            <i className="fa-solid fa-triangle-exclamation text-amber-600 mt-0.5"></i>
+                                            <span><strong>Perhatian:</strong> Setiap siswa hanya diberi kesempatan mengerjakan <strong>1 kali</strong> dengan durasi waktu 30 menit. KKM = 80.</span>
+                                        </div>
+
+                                        <button 
+                                            type="submit" 
+                                            className="w-full py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-lg hover:shadow-teal-600/30 transition duration-200 flex items-center justify-center gap-2"
+                                        >
+                                            <i className="fa-solid fa-play"></i> Mulai Mengerjakan Ujian
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            {/* Admin Login Card */}
+                            <div className="bg-white rounded-2xl shadow-lg p-6 border border-slate-200 hover:shadow-xl transition flex flex-col justify-between">
+                                <div>
+                                    <div className="flex items-center gap-3 mb-4 text-slate-700">
+                                        <div className="p-3 bg-slate-100 rounded-xl">
+                                            <i className="fa-solid fa-user-shield text-2xl text-slate-700"></i>
+                                        </div>
+                                        <div>
+                                            <h2 className="text-lg font-bold text-slate-800">Akses Admin / Guru</h2>
+                                            <p className="text-xs text-slate-500">Kelola soal, logo, nilai, & uji coba aplikasi</p>
+                                        </div>
+                                    </div>
+
+                                    <form onSubmit={(e) => {
+                                        e.preventDefault();
+                                        const uname = e.target.username.value.trim();
+                                        const pass = e.target.password.value;
+
+                                        if (uname === 'admin' && pass === adminPass) {
+                                            setView('admin');
+                                        } else {
+                                            Swal.fire('Akses Ditolak', 'Username atau Password Admin salah!', 'error');
+                                        }
+                                    }}>
+                                        <div className="mb-4">
+                                            <label className="block text-xs font-bold text-slate-700 mb-1 uppercase">Username Admin</label>
+                                            <input 
+                                                type="text" 
+                                                name="username" 
+                                                defaultValue="admin"
+                                                required 
+                                                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-slate-500 focus:outline-none text-sm"
+                                            />
+                                        </div>
+
+                                        <div className="mb-6">
+                                            <label className="block text-xs font-bold text-slate-700 mb-1 uppercase">Password Admin</label>
+                                            <input 
+                                                type="password" 
+                                                name="password" 
+                                                placeholder="Standard: admin123"
+                                                required 
+                                                className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-slate-500 focus:outline-none text-sm"
+                                            />
+                                        </div>
+
+                                        <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 mb-6 text-xs text-slate-600">
+                                            <i className="fa-solid fa-info-circle mr-1 text-slate-500"></i>
+                                            Username standar: <code className="bg-slate-200 px-1 py-0.5 rounded font-mono">admin</code> | Password standar: <code className="bg-slate-200 px-1 py-0.5 rounded font-mono">{adminPass}</code>
+                                        </div>
+
+                                        <button 
+                                            type="submit" 
+                                            className="w-full py-3 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl shadow-lg transition duration-200 flex items-center justify-center gap-2"
+                                        >
+                                            <i className="fa-solid fa-key"></i> Masuk Mode Admin / Guru
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            const renderExamView = () => {
+                const q = questions[currentQIndex];
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                return (
+                    <div className="max-w-6xl mx-auto px-4 py-6">
+                        {/* Exam Header Bar */}
+                        <div className="bg-white rounded-2xl shadow-md p-4 mb-6 flex flex-wrap items-center justify-between gap-4 sticky top-4 z-10 border border-slate-200">
+                            <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-xl bg-teal-100 flex items-center justify-center text-teal-700 font-bold">
+                                    {currentStudent.presensi || '00'}
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-slate-800 text-sm md:text-base">{currentStudent.nama || 'Siswa Uji Coba'} {isTestingMode && <span className="bg-amber-100 text-amber-800 text-xs px-2 py-0.5 rounded font-normal ml-2">Mode Uji Coba Admin</span>}</h3>
+                                    <p className="text-xs text-slate-500">Kelas: {currentStudent.kelas || 'VIII A'} | Soal {currentQIndex + 1} dari {questions.length}</p>
+                                </div>
+                            </div>
+
+                            {/* Timer Badge */}
+                            <div className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold shadow-sm ${timeLeft < 300 ? 'bg-red-100 text-red-700 animate-pulse' : 'bg-teal-50 text-teal-800 border border-teal-200'}`}>
+                                <i className="fa-regular fa-clock"></i>
+                                <span>Sisa Waktu: {formattedTime}</span>
+                            </div>
+                        </div>
+
+                        <div className="grid md:grid-cols-4 gap-6">
+                            {/* Main Question Card */}
+                            <div className="md:col-span-3 bg-white rounded-2xl shadow-lg p-6 border border-slate-200 flex flex-col justify-between">
+                                <div>
+                                    {/* Question Type Header */}
+                                    <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+                                        <span className="text-xs font-bold px-3 py-1 bg-slate-100 text-slate-700 rounded-full">
+                                            {q.type === 'pg' && 'Pilihan Ganda'}
+                                            {q.type === 'pgk' && 'Pilihan Ganda Kompleks (Bisa pilih lebih dari satu)'}
+                                            {q.type === 'match' && 'Menjodohkan / Pasangkan'}
+                                            {q.type === 'short' && 'Isian Singkat'}
+                                        </span>
+                                        <span className="text-xs text-slate-400 font-medium">Soal No. {currentQIndex + 1}</span>
+                                    </div>
+
+                                    {/* Question Text */}
+                                    <div className="text-slate-800 font-medium text-base mb-6 leading-relaxed whitespace-pre-line">
+                                        {q.question}
+                                    </div>
+
+                                    {/* Question Options / Inputs */}
+                                    {q.type === 'pg' && (
+                                        <div className="space-y-3">
+                                            {q.options.map((opt, idx) => {
+                                                const selected = answers[q.id] === idx;
+                                                const letters = ['A', 'B', 'C', 'D'];
+                                                return (
+                                                    <div 
+                                                        key={idx}
+                                                        onClick={() => setAnswers({...answers, [q.id]: idx})}
+                                                        className={`p-4 rounded-xl border transition cursor-pointer flex items-start gap-3 ${selected ? 'bg-teal-50 border-teal-600 text-teal-900 shadow-sm' : 'border-slate-200 hover:bg-slate-50 text-slate-700'}`}
+                                                    >
+                                                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 ${selected ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-600'}`}>
+                                                            {letters[idx]}
+                                                        </div>
+                                                        <div className="text-sm mt-0.5">{opt}</div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+
+                                    {q.type === 'pgk' && (
+                                        <div className="space-y-3">
+                                            {q.options.map((opt, idx) => {
+                                                const currentArr = answers[q.id] || [];
+                                                const isChecked = currentArr.includes(idx);
+                                                
+                                                const toggleCheck = () => {
+                                                    let nextArr;
+                                                    if (isChecked) {
+                                                        nextArr = currentArr.filter(i => i !== idx);
+                                                    } else {
+                                                        nextArr = [...currentArr, idx];
+                                                    }
+                                                    setAnswers({...answers, [q.id]: nextArr});
+                                                };
+
+                                                return (
+                                                    <div 
+                                                        key={idx}
+                                                        onClick={toggleCheck}
+                                                        className={`p-4 rounded-xl border transition cursor-pointer flex items-start gap-3 ${isChecked ? 'bg-teal-50 border-teal-600 text-teal-900 shadow-sm' : 'border-slate-200 hover:bg-slate-50 text-slate-700'}`}
+                                                    >
+                                                        <input 
+                                                            type="checkbox" 
+                                                            checked={isChecked} 
+                                                            onChange={() => {}} 
+                                                            className="mt-1 accent-teal-600 rounded h-4 w-4"
+                                                        />
+                                                        <div className="text-sm">{opt}</div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+
+                                    {q.type === 'match' && (
+                                        <div className="space-y-4">
+                                            <p className="text-xs text-slate-500 italic mb-2">Pilih jawaban pasangannya pada dropdown di sebelah kanan:</p>
+                                            {q.pairs.map((pair, pIdx) => {
+                                                const userMatchMap = answers[q.id] || {};
+                                                const currentVal = userMatchMap[pair.item] || '';
+
+                                                return (
+                                                    <div key={pIdx} className="p-4 bg-slate-50 rounded-xl border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                                        <div className="text-sm font-semibold text-slate-800 sm:w-1/2">
+                                                            {pIdx + 1}. {pair.item}
+                                                        </div>
+                                                        <div className="sm:w-1/2">
+                                                            <select 
+                                                                value={currentVal}
+                                                                onChange={(e) => {
+                                                                    const val = e.target.value;
+                                                                    const updatedMap = { ...userMatchMap, [pair.item]: val };
+                                                                    setAnswers({ ...answers, [q.id]: updatedMap });
+                                                                }}
+                                                                className="w-full p-2.5 rounded-lg border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-teal-500"
+                                                            >
+                                                                <option value="">-- Pilih Pasangan --</option>
+                                                                {q.targets.map((tVal, tIdx) => (
+                                                                    <option key={tIdx} value={tVal}>{tVal}</option>
+                                                                ))}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+
+                                    {q.type === 'short' && (
+                                        <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                                            <label className="block text-xs font-bold text-slate-600 mb-2 uppercase">Ketikkan Jawaban Singkat Anda:</label>
+                                            <input 
+                                                type="text"
+                                                value={answers[q.id] || ''}
+                                                onChange={(e) => setAnswers({ ...answers, [q.id]: e.target.value })}
+                                                placeholder="Ketik kata/frasa jawaban..."
+                                                className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-500 focus:outline-none text-base bg-white"
+                                            />
+                                            <p className="text-xs text-slate-400 mt-2">*Gunakan huruf atau kata kunci yang tepat.</p>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Bottom Navigation */}
+                                <div className="flex items-center justify-between gap-2 mt-8 pt-4 border-t border-slate-100">
+                                    <button 
+                                        disabled={currentQIndex === 0}
+                                        onClick={() => setCurrentQIndex(prev => prev - 1)}
+                                        className={`px-4 py-2.5 rounded-xl font-bold text-sm flex items-center gap-2 ${currentQIndex === 0 ? 'bg-slate-100 text-slate-400 cursor-not-allowed' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}`}
+                                    >
+                                        <i className="fa-solid fa-arrow-left"></i> Sebelumnya
+                                    </button>
+
+                                    {currentQIndex === questions.length - 1 ? (
+                                        <button 
+                                            onClick={() => {
+                                                Swal.fire({
+                                                    title: 'Konfirmasi Selesai',
+                                                    text: 'Apakah Anda yakin ingin menyelesaikan dan mengirim jawaban ujian ini?',
+                                                    icon: 'question',
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: '#0d9488',
+                                                    cancelButtonColor: '#64748b',
+                                                    confirmButtonText: 'Ya, Selesaikan',
+                                                    cancelButtonText: 'Batal'
+                                                }).then((res) => {
+                                                    if (res.isConfirmed) submitExam();
+                                                });
+                                            }}
+                                            className="px-6 py-2.5 rounded-xl font-bold text-sm bg-teal-600 hover:bg-teal-700 text-white shadow-lg flex items-center gap-2"
+                                        >
+                                            <i className="fa-solid fa-check-circle"></i> Selesaikan & Kirim
+                                        </button>
+                                    ) : (
+                                        <button 
+                                            onClick={() => setCurrentQIndex(prev => prev + 1)}
+                                            className="px-6 py-2.5 rounded-xl font-bold text-sm bg-teal-600 hover:bg-teal-700 text-white shadow-md flex items-center gap-2"
+                                        >
+                                            Berikutnya <i className="fa-solid fa-arrow-right"></i>
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Sidebar Question Navigation Grid */}
+                            <div className="bg-white rounded-2xl shadow-lg p-5 border border-slate-200 h-fit">
+                                <h4 className="font-bold text-slate-800 text-sm mb-3 pb-2 border-b border-slate-100 flex items-center justify-between">
+                                    <span>Peta Soal</span>
+                                    <span className="text-xs text-slate-400 font-normal">Total {questions.length} Soal</span>
+                                </h4>
+
+                                <div className="grid grid-cols-5 gap-2 mb-4">
+                                    {questions.map((item, idx) => {
+                                        const isCurrent = currentQIndex === idx;
+                                        const isAnswered = answers[item.id] !== undefined && 
+                                                           answers[item.id] !== '' && 
+                                                           (Array.isArray(answers[item.id]) ? answers[item.id].length > 0 : true) &&
+                                                           (typeof answers[item.id] === 'object' && !Array.isArray(answers[item.id]) ? Object.keys(answers[item.id]).length > 0 : true);
+
+                                        let btnClass = 'bg-slate-100 text-slate-600 border border-slate-200';
+                                        if (isCurrent) {
+                                            btnClass = 'bg-teal-600 text-white font-bold ring-2 ring-teal-400';
+                                        } else if (isAnswered) {
+                                            btnClass = 'bg-emerald-100 text-emerald-800 border border-emerald-300 font-semibold';
+                                        }
+
+                                        return (
+                                            <button 
+                                                key={idx}
+                                                onClick={() => setCurrentQIndex(idx)}
+                                                className={`w-full h-10 rounded-lg text-xs flex items-center justify-center transition ${btnClass}`}
+                                            >
+                                                {idx + 1}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+
+                                <div className="space-y-2 pt-2 border-t border-slate-100 text-xs text-slate-500">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-3 h-3 rounded bg-teal-600"></div>
+                                        <span>Soal Aktif</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-3 h-3 rounded bg-emerald-100 border border-emerald-300"></div>
+                                        <span>Sudah Dijawab</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-3 h-3 rounded bg-slate-100 border border-slate-200"></div>
+                                        <span>Belum Dijawab</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            const renderResultView = () => {
+                if (!finalResult) return null;
+                const passed = finalResult.score >= 80;
+
+                return (
+                    <div className="max-w-4xl mx-auto px-4 py-8">
+                        {/* Printable Area Wrapper */}
+                        <div className="bg-white rounded-2xl shadow-xl p-8 border border-slate-200">
+                            {/* Header for Printable Certificate */}
+                            <div className="text-center border-b-2 border-slate-800 pb-6 mb-6">
+                                <div className="flex items-center justify-center gap-4 mb-2">
+                                    <img src={logoUrl} alt="Logo" className="h-16 w-auto" />
+                                    <div className="text-left">
+                                        <h2 className="text-lg font-bold text-slate-800 uppercase tracking-wide">KEMENTERIAN AGAMA KOTA MALANG</h2>
+                                        <h3 className="text-sm font-semibold text-slate-600">{headerTitle}</h3>
+                                        <p className="text-xs text-slate-500">{penyusun}</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="text-center mb-8">
+                                <span className={`inline-block px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-2 ${passed ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+                                    {passed ? 'LULUS KKM (80)' : 'REMEDIAL (< 80)'}
+                                </span>
+                                <h1 className="text-3xl font-extrabold text-slate-800">HASIL ASESMEN SUMATIF IPA</h1>
+                                <p className="text-sm text-slate-500">Materi: Sistem Pernapasan & Ekskresi Manusia</p>
+                            </div>
+
+                            {/* Score Big Display */}
+                            <div className="flex justify-center mb-8">
+                                <div className={`w-40 h-40 rounded-full flex flex-col items-center justify-center shadow-inner border-4 ${passed ? 'bg-emerald-50 border-emerald-500 text-emerald-700' : 'bg-rose-50 border-rose-500 text-rose-700'}`}>
+                                    <span className="text-xs font-bold uppercase tracking-wider">SKOR AKHIR</span>
+                                    <span className="text-5xl font-black">{finalResult.score}</span>
+                                    <span className="text-xs text-slate-500 mt-1">KKM: 80</span>
+                                </div>
+                            </div>
+
+                            {/* Identity Details */}
+                            <div className="bg-slate-50 rounded-xl p-6 mb-8 border border-slate-200 grid sm:grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <span className="text-xs text-slate-400 uppercase font-bold block">Nama Lengkap Siswa</span>
+                                    <span className="font-bold text-slate-800">{finalResult.nama}</span>
+                                </div>
+                                <div>
+                                    <span className="text-xs text-slate-400 uppercase font-bold block">Kelas / Presensi</span>
+                                    <span className="font-bold text-slate-800">{finalResult.kelas} / No. {finalResult.presensi}</span>
+                                </div>
+                                <div>
+                                    <span className="text-xs text-slate-400 uppercase font-bold block">Waktu Pengerjaan</span>
+                                    <span className="font-bold text-slate-800">{finalResult.timeSpent || '30 menit'}</span>
+                                </div>
+                                <div>
+                                    <span className="text-xs text-slate-400 uppercase font-bold block">Tanggal Selesai</span>
+                                    <span className="font-bold text-slate-800">{finalResult.date}</span>
+                                </div>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="flex flex-wrap items-center justify-center gap-4 no-print border-t border-slate-100 pt-6">
+                                <button 
+                                    onClick={() => window.print()} 
+                                    className="px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-xl shadow-lg flex items-center gap-2"
+                                >
+                                    <i className="fa-solid fa-print"></i> Cetak / Download Kartu Hasil (PDF)
+                                </button>
+                                <button 
+                                    onClick={() => setView('login')} 
+                                    className="px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl flex items-center gap-2"
+                                >
+                                    <i className="fa-solid fa-house"></i> Kembali ke Halaman Utama
+                                </button>
+                            </div>
+
+                            {/* Pembahasan & Review Soal */}
+                            <div className="mt-10 pt-8 border-t border-slate-200">
+                                <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                    <i className="fa-solid fa-book-open text-teal-600"></i> Review Jawaban & Pembahasan
+                                </h3>
+
+                                <div className="space-y-6">
+                                    {questions.map((q, idx) => {
+                                        return (
+                                            <div key={idx} className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-sm">
+                                                <div className="font-bold text-slate-800 mb-2">
+                                                    {idx + 1}. {q.question}
+                                                </div>
+                                                <div className="text-xs text-slate-600 bg-white p-3 rounded-lg border border-slate-200 mb-2">
+                                                    <strong>Kunci / Pembahasan:</strong> {q.explanation}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            const renderAdminView = () => {
+                const [adminTab, setAdminTab] = React.useState('results'); // 'results', 'edit_soal', 'settings'
+                const [editingQ, setEditingQ] = React.useState(null);
+
+                return (
+                    <div className="max-w-6xl mx-auto px-4 py-8">
+                        {/* Admin Navigation Header */}
+                        <div className="bg-slate-800 text-white rounded-2xl shadow-xl p-6 mb-8 flex flex-wrap items-center justify-between gap-4">
+                            <div>
+                                <h1 className="text-xl font-bold flex items-center gap-2">
+                                    <i className="fa-solid fa-user-gear text-teal-400"></i> Panel Kontrol Guru / Admin
+                                </h1>
+                                <p className="text-xs text-slate-400 mt-1">MGMP IPA MTs Kota Malang - Wiwik Astutik, S. Pd</p>
+                            </div>
+                            
+                            <div className="flex items-center gap-2">
+                                <button 
+                                    onClick={() => {
+                                        startExam({ nama: 'Simulasi Guru (Admin)', kelas: 'VIII A', presensi: '99' }, true);
+                                    }}
+                                    className="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-xl shadow flex items-center gap-1.5"
+                                >
+                                    <i className="fa-solid fa-vial"></i> Uji Coba Soal (Sebagai Siswa)
+                                </button>
+                                <button 
+                                    onClick={() => setView('login')}
+                                    className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow flex items-center gap-1.5"
+                                >
+                                    <i className="fa-solid fa-right-from-bracket"></i> Keluar
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Admin Sub Tabs */}
+                        <div className="flex border-b border-slate-200 mb-6 gap-2">
+                            <button 
+                                onClick={() => setAdminTab('results')}
+                                className={`px-5 py-3 font-bold text-sm rounded-t-xl transition flex items-center gap-2 ${adminTab === 'results' ? 'bg-white border-t-2 border-teal-600 text-teal-700 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                            >
+                                <i className="fa-solid fa-list-check"></i> Rekap Hasil Siswa ({studentAttempts.length})
+                            </button>
+                            <button 
+                                onClick={() => setAdminTab('edit_soal')}
+                                className={`px-5 py-3 font-bold text-sm rounded-t-xl transition flex items-center gap-2 ${adminTab === 'edit_soal' ? 'bg-white border-t-2 border-teal-600 text-teal-700 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                            >
+                                <i className="fa-solid fa-pen-to-square"></i> Kelola & Edit Soal ({questions.length})
+                            </button>
+                            <button 
+                                onClick={() => setAdminTab('settings')}
+                                className={`px-5 py-3 font-bold text-sm rounded-t-xl transition flex items-center gap-2 ${adminTab === 'settings' ? 'bg-white border-t-2 border-teal-600 text-teal-700 shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+                            >
+                                <i className="fa-solid fa-sliders"></i> Pengaturan Logo & Password
+                            </button>
+                        </div>
+
+                        {/* TAB 1: Student Results Table */}
+                        {adminTab === 'results' && (
+                            <div className="bg-white rounded-2xl shadow-lg p-6 border border-slate-200">
+                                <div className="flex items-center justify-between mb-4">
+                                    <h3 className="font-bold text-slate-800 text-base">Data Pengerjaan Siswa</h3>
+                                    <button 
+                                        onClick={() => {
+                                            Swal.fire({
+                                                title: 'Hapus Semua Data Hasil?',
+                                                text: 'Seluruh rekap nilai siswa akan dihapus permanen!',
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#e11d48',
+                                                confirmButtonText: 'Ya, Hapus Semua'
+                                            }).then(res => {
+                                                if (res.isConfirmed) setStudentAttempts([]);
+                                            });
+                                        }}
+                                        className="px-3 py-1.5 bg-rose-50 text-rose-600 hover:bg-rose-100 font-semibold text-xs rounded-lg border border-rose-200"
+                                    >
+                                        <i className="fa-solid fa-trash mr-1"></i> Bersihkan Rekap
+                                    </button>
+                                </div>
+
+                                {studentAttempts.length === 0 ? (
+                                    <div className="text-center py-12 text-slate-400">
+                                        <i className="fa-regular fa-folder-open text-4xl mb-2 block"></i>
+                                        <p className="text-sm">Belum ada siswa yang menyelesaikan ujian.</p>
+                                    </div>
+                                ) : (
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full text-left text-sm text-slate-700">
+                                            <thead className="bg-slate-100 text-slate-600 uppercase text-[11px] font-bold">
+                                                <tr>
+                                                    <th className="p-3 rounded-l-lg">No</th>
+                                                    <th className="p-3">Nama Siswa</th>
+                                                    <th className="p-3">Kelas</th>
+                                                    <th className="p-3">No. Presensi</th>
+                                                    <th className="p-3">Skor</th>
+                                                    <th className="p-3">Status KKM (80)</th>
+                                                    <th className="p-3 rounded-r-lg">Waktu Selesai</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-slate-100">
+                                                {studentAttempts.map((item, idx) => (
+                                                    <tr key={idx} className="hover:bg-slate-50">
+                                                        <td className="p-3 font-semibold">{idx + 1}</td>
+                                                        <td className="p-3 font-bold text-slate-800">{item.nama}</td>
+                                                        <td className="p-3">{item.kelas}</td>
+                                                        <td className="p-3">{item.presensi}</td>
+                                                        <td className="p-3 font-extrabold text-base">{item.score}</td>
+                                                        <td className="p-3">
+                                                            <span className={`px-2.5 py-1 rounded-full text-[11px] font-bold ${item.passed ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+                                                                {item.passed ? 'LULUS' : 'REMEDIAL'}
+                                                            </span>
+                                                        </td>
+                                                        <td className="p-3 text-xs text-slate-500">{item.date}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+
+                        {/* TAB 2: Edit Questions */}
+                        {adminTab === 'edit_soal' && (
+                            <div className="bg-white rounded-2xl shadow-lg p-6 border border-slate-200">
+                                <h3 className="font-bold text-slate-800 text-base mb-4">Daftar Soal Asesmen (20 Soal)</h3>
+
+                                <div className="space-y-4">
+                                    {questions.map((q, idx) => (
+                                        <div key={q.id} className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                            <div>
+                                                <span className="text-xs font-bold text-teal-700 bg-teal-100 px-2 py-0.5 rounded mr-2">
+                                                    Soal {idx + 1} ({q.type.toUpperCase()})
+                                                </span>
+                                                <p className="text-sm text-slate-800 font-medium mt-1 line-clamp-2">{q.question}</p>
+                                            </div>
+                                            <button 
+                                                onClick={() => setEditingQ(q)}
+                                                className="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs rounded-lg shrink-0 flex items-center gap-1"
+                                            >
+                                                <i className="fa-solid fa-pen"></i> Edit Soal Ini
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Edit Question Modal */}
+                        {editingQ && (
+                            <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                                <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6">
+                                    <h3 className="font-bold text-slate-800 text-lg mb-4">Edit Soal No. {editingQ.id}</h3>
+                                    
+                                    <form onSubmit={(e) => {
+                                        e.preventDefault();
+                                        const updatedText = e.target.questionText.value;
+                                        const updatedExp = e.target.explanationText.value;
+
+                                        const nextQuestions = questions.map(q => {
+                                            if (q.id === editingQ.id) {
+                                                return {
+                                                    ...q,
+                                                    question: updatedText,
+                                                    explanation: updatedExp
+                                                };
+                                            }
+                                            return q;
+                                        });
+
+                                        setQuestions(nextQuestions);
+                                        setEditingQ(null);
+                                        Swal.fire('Berhasil', 'Soal telah diperbarui!', 'success');
+                                    }}>
+                                        <div className="mb-4">
+                                            <label className="block text-xs font-bold text-slate-700 mb-1 uppercase">Teks Pertanyaan Soal</label>
+                                            <textarea 
+                                                name="questionText"
+                                                rows="4"
+                                                defaultValue={editingQ.question}
+                                                className="w-full p-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-teal-500"
+                                                required
+                                            ></textarea>
+                                        </div>
+
+                                        <div className="mb-6">
+                                            <label className="block text-xs font-bold text-slate-700 mb-1 uppercase">Kunci & Pembahasan Soal</label>
+                                            <textarea 
+                                                name="explanationText"
+                                                rows="3"
+                                                defaultValue={editingQ.explanation}
+                                                className="w-full p-3 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-teal-500"
+                                                required
+                                            ></textarea>
+                                        </div>
+
+                                        <div className="flex justify-end gap-3">
+                                            <button 
+                                                type="button"
+                                                onClick={() => setEditingQ(null)}
+                                                className="px-4 py-2 bg-slate-200 text-slate-700 font-bold text-xs rounded-xl"
+                                            >
+                                                Batal
+                                            </button>
+                                            <button 
+                                                type="submit"
+                                                className="px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-xl shadow"
+                                            >
+                                                Simpan Perubahan
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* TAB 3: System Settings */}
+                        {adminTab === 'settings' && (
+                            <div className="grid md:grid-cols-2 gap-6">
+                                {/* Password Change Form */}
+                                <div className="bg-white rounded-2xl shadow-lg p-6 border border-slate-200">
+                                    <h3 className="font-bold text-slate-800 text-base mb-4 flex items-center gap-2">
+                                        <i className="fa-solid fa-lock text-teal-600"></i> Ganti Password Admin
+                                    </h3>
+                                    <form onSubmit={(e) => {
+                                        e.preventDefault();
+                                        const newP = e.target.newPass.value;
+                                        if (newP.length < 4) {
+                                            Swal.fire('Error', 'Password minimal 4 karakter!', 'error');
+                                            return;
+                                        }
+                                        setAdminPass(newP);
+                                        localStorage.setItem('mts_admin_pass', newP);
+                                        Swal.fire('Berhasil', 'Password admin berhasil diubah!', 'success');
+                                        e.target.reset();
+                                    }}>
+                                        <div className="mb-4">
+                                            <label className="block text-xs font-bold text-slate-700 mb-1 uppercase">Password Baru</label>
+                                            <input 
+                                                type="password" 
+                                                name="newPass"
+                                                required
+                                                className="w-full px-4 py-2 rounded-xl border border-slate-300 text-sm"
+                                            />
+                                        </div>
+                                        <button 
+                                            type="submit"
+                                            className="px-4 py-2 bg-teal-600 text-white font-bold text-xs rounded-xl shadow"
+                                        >
+                                            Update Password
+                                        </button>
+                                    </form>
+                                </div>
+
+                                {/* Logo & Header Settings */}
+                                <div className="bg-white rounded-2xl shadow-lg p-6 border border-slate-200">
+                                    <h3 className="font-bold text-slate-800 text-base mb-4 flex items-center gap-2">
+                                        <i className="fa-solid fa-image text-teal-600"></i> Edit Logo & Judul Header
+                                    </h3>
+                                    <form onSubmit={(e) => {
+                                        e.preventDefault();
+                                        const newLogo = e.target.logo.value.trim();
+                                        const newTitle = e.target.title.value.trim();
+                                        const newPenyusun = e.target.penyusunInput.value.trim();
+
+                                        setLogoUrl(newLogo);
+                                        setHeaderTitle(newTitle);
+                                        setPenyusun(newPenyusun);
+
+                                        localStorage.setItem('mts_logo_url', newLogo);
+                                        localStorage.setItem('mts_header_title', newTitle);
+                                        localStorage.setItem('mts_penyusun', newPenyusun);
+
+                                        Swal.fire('Berhasil', 'Pengaturan header & logo disimpan!', 'success');
+                                    }}>
+                                        <div className="mb-3">
+                                            <label className="block text-xs font-bold text-slate-700 mb-1 uppercase">URL Logo</label>
+                                            <input 
+                                                type="text" 
+                                                name="logo"
+                                                defaultValue={logoUrl}
+                                                className="w-full px-4 py-2 rounded-xl border border-slate-300 text-sm"
+                                            />
+                                        </div>
+                                        <div className="mb-3">
+                                            <label className="block text-xs font-bold text-slate-700 mb-1 uppercase">Judul Asesmen</label>
+                                            <input 
+                                                type="text" 
+                                                name="title"
+                                                defaultValue={headerTitle}
+                                                className="w-full px-4 py-2 rounded-xl border border-slate-300 text-sm"
+                                            />
+                                        </div>
+                                        <div className="mb-4">
+                                            <label className="block text-xs font-bold text-slate-700 mb-1 uppercase">Nama Penyusun</label>
+                                            <input 
+                                                type="text" 
+                                                name="penyusunInput"
+                                                defaultValue={penyusun}
+                                                className="w-full px-4 py-2 rounded-xl border border-slate-300 text-sm"
+                                            />
+                                        </div>
+                                        <button 
+                                            type="submit"
+                                            className="px-4 py-2 bg-teal-600 text-white font-bold text-xs rounded-xl shadow"
+                                        >
+                                            Simpan Pengaturan
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                );
+            };
+
+            return (
+                <div className="min-h-screen">
+                    {view === 'login' && renderLoginView()}
+                    {view === 'exam' && renderExamView()}
+                    {view === 'result' && renderResultView()}
+                    {view === 'admin' && renderAdminView()}
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
